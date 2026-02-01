@@ -18,10 +18,11 @@ export class FrontendStack extends cdk.Stack {
     const bffApiUrl = cdk.Fn.importValue('ConceptoBffApiUrl');
 
     // S3 bucket for static website hosting
+    // Note: Do NOT enable websiteIndexDocument/websiteErrorDocument here
+    // as it switches CloudFront to use custom origin instead of S3 origin,
+    // which breaks OAI. CloudFront handles SPA routing via error responses.
     const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
       bucketName: `concepto-frontend-${this.account}`,
-      websiteIndexDocument: 'index.html',
-      websiteErrorDocument: 'index.html',
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
