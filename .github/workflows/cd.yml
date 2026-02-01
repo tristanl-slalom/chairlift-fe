@@ -1,0 +1,64 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get BFF API URL
+        id: get-bff-url
+        run: |
+          BFF_URL=$(aws cloudformation describe-stacks \
+            --stack-name ConceptoBffStack \
+            --query 'Stacks[0].Outputs[?OutputKey==`ApiUrl`].OutputValue' \
+            --output text)
+          echo "BFF_URL=${BFF_URL}api" >> $GITHUB_OUTPUT
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ steps.get-bff-url.outputs.BFF_URL }}
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: CDK Bootstrap (if needed)
+        run: cdk bootstrap
+
+      - name: CDK Deploy
+        run: cdk deploy --require-approval never
+
+      - name: Output Website URL
+        run: |
+          WEBSITE_URL=$(aws cloudformation describe-stacks \
+            --stack-name ConceptoFrontendStack \
+            --query 'Stacks[0].Outputs[?OutputKey==`WebsiteUrl`].OutputValue' \
+            --output text)
+          echo "Website URL: $WEBSITE_URL"
