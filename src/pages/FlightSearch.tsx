@@ -31,7 +31,7 @@ export default function FlightSearch() {
   };
 
   const handleFlightSelect = (flight: Flight) => {
-    navigate(`/flights/${flight.flightId}`);
+    navigate(`/booking?flightId=${flight.flightId}`);
   };
 
   return (
