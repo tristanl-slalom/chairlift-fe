@@ -46,8 +46,8 @@ export function BookingCard({ booking, flight, onClick }: BookingCardProps) {
     >
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-lg font-bold text-gray-900">{flight.airline}</h3>
-          <p className="text-sm text-gray-600">Flight {flight.flightNumber}</p>
+          <h3 className="text-lg font-bold text-gray-900">{flight.airlineCode} {flight.flightNumber}</h3>
+          <p className="text-sm text-gray-600">{flight.aircraft}</p>
         </div>
         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(booking.status)}`}>
           {booking.status}

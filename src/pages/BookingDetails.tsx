@@ -90,8 +90,8 @@ export default function BookingDetails() {
             <div className="bg-gray-50 rounded-lg p-6 mb-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">{flight.airline}</h3>
-                  <p className="text-gray-600">Flight {flight.flightNumber}</p>
+                  <h3 className="text-2xl font-bold text-gray-900">{flight.airlineCode} {flight.flightNumber}</h3>
+                  <p className="text-gray-600">{flight.aircraft}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-3xl font-bold text-blue-600">${booking.totalPrice}</p>

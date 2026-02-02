@@ -136,7 +136,7 @@ export default function BookingFlow() {
                 )}
                 <div className="flex justify-between text-lg border-t pt-2 mt-2">
                   <span className="text-gray-600">Total Price:</span>
-                  <span className="font-bold text-blue-600">${flight.price}</span>
+                  <span className="font-bold text-blue-600">${flight.pricing.economy}</span>
                 </div>
               </div>
             </div>
