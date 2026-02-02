@@ -19,15 +19,12 @@ export default function TasksPage() {
   }, [tasks, filterStatus]);
 
   const taskCounts = useMemo(() => {
-    const counts = {
-      ALL: tasks.length,
-      TODO: 0,
-      IN_PROGRESS: 0,
-      DONE: 0
+    const counts: Record<string, number> = {
+      ALL: tasks.length
     };
 
     tasks.forEach((task) => {
-      counts[task.status]++;
+      counts[task.status] = (counts[task.status] || 0) + 1;
     });
 
     return counts;

@@ -1,17 +1,33 @@
 import { TaskStatus } from '../../types/task';
+import { useStatuses } from '../../hooks/useStatuses';
 
 interface TaskFiltersProps {
   selectedStatus: TaskStatus | 'ALL';
   onStatusChange: (status: TaskStatus | 'ALL') => void;
-  taskCounts: Record<TaskStatus | 'ALL', number>;
+  taskCounts: Record<string, number>;
 }
 
 export default function TaskFilters({ selectedStatus, onStatusChange, taskCounts }: TaskFiltersProps) {
-  const filters: Array<{ value: TaskStatus | 'ALL'; label: string }> = [
+  const { data: statuses = [], isLoading } = useStatuses();
+
+  if (isLoading) {
+    return (
+      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+        <h3 className="text-sm font-medium text-gray-700 mb-3">Filter by Status</h3>
+        <div className="flex gap-2">
+          <div className="h-10 w-24 bg-gray-200 animate-pulse rounded-md"></div>
+          <div className="h-10 w-24 bg-gray-200 animate-pulse rounded-md"></div>
+          <div className="h-10 w-24 bg-gray-200 animate-pulse rounded-md"></div>
+        </div>
+      </div>
+    );
+  }
+
+  const filters: Array<{ value: string; label: string }> = [
     { value: 'ALL', label: 'All' },
-    { value: 'TODO', label: 'To Do' },
-    { value: 'IN_PROGRESS', label: 'In Progress' },
-    { value: 'DONE', label: 'Done' }
+    ...statuses
+      .sort((a, b) => a.displayOrder - b.displayOrder)
+      .map(s => ({ value: s.statusKey, label: s.displayName }))
   ];
 
   return (

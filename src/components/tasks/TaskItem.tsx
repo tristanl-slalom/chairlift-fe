@@ -1,4 +1,5 @@
 import { Task, TaskStatus } from '../../types/task';
+import { useStatuses } from '../../hooks/useStatuses';
 
 interface TaskItemProps {
   task: Task;
@@ -6,19 +7,11 @@ interface TaskItemProps {
   onDelete: (id: string) => void;
 }
 
-const statusColors: Record<TaskStatus, string> = {
-  TODO: 'bg-gray-100 text-gray-800',
-  IN_PROGRESS: 'bg-blue-100 text-blue-800',
-  DONE: 'bg-green-100 text-green-800'
-};
-
-const statusLabels: Record<TaskStatus, string> = {
-  TODO: 'To Do',
-  IN_PROGRESS: 'In Progress',
-  DONE: 'Done'
-};
-
 export default function TaskItem({ task, onStatusChange, onDelete }: TaskItemProps) {
+  const { data: statuses = [], isLoading } = useStatuses();
+
+  const currentStatus = statuses.find(s => s.statusKey === task.status);
+  const color = currentStatus?.color || '#6B7280';
   return (
     <div className="bg-white shadow-md rounded-lg p-4 mb-3 hover:shadow-lg transition-shadow">
       <div className="flex items-start justify-between">
@@ -39,11 +32,24 @@ export default function TaskItem({ task, onStatusChange, onDelete }: TaskItemPro
           <select
             value={task.status}
             onChange={(e) => onStatusChange(task.id, e.target.value as TaskStatus)}
-            className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[task.status]} border-0 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            disabled={isLoading}
+            className="px-3 py-1 rounded-full text-sm font-medium border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            style={{
+              backgroundColor: `${color}20`,
+              color: color
+            }}
           >
-            <option value="TODO">{statusLabels.TODO}</option>
-            <option value="IN_PROGRESS">{statusLabels.IN_PROGRESS}</option>
-            <option value="DONE">{statusLabels.DONE}</option>
+            {isLoading ? (
+              <option>Loading...</option>
+            ) : (
+              statuses
+                .sort((a, b) => a.displayOrder - b.displayOrder)
+                .map(s => (
+                  <option key={s.statusKey} value={s.statusKey}>
+                    {s.icon} {s.displayName}
+                  </option>
+                ))
+            )}
           </select>
 
           <button

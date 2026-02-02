@@ -1,4 +1,4 @@
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+export type TaskStatus = string; // Changed from enum to string for dynamic statuses
 
 export interface Task {
   id: string;

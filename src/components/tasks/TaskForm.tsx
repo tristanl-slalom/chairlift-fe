@@ -1,5 +1,6 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { CreateTaskRequest, TaskStatus } from '../../types/task';
+import { useStatuses } from '../../hooks/useStatuses';
 
 interface TaskFormProps {
   onSubmit: (task: CreateTaskRequest) => void;
@@ -7,9 +8,18 @@ interface TaskFormProps {
 }
 
 export default function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
+  const { data: statuses = [], isLoading } = useStatuses();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState<TaskStatus>('TODO');
+  const [status, setStatus] = useState<TaskStatus>('');
+
+  // Set default status when statuses are loaded
+  useEffect(() => {
+    if (statuses.length > 0 && !status) {
+      const defaultStatus = statuses.find(s => s.isDefault);
+      setStatus(defaultStatus?.statusKey || statuses[0].statusKey);
+    }
+  }, [statuses, status]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -17,7 +27,9 @@ export default function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
       onSubmit({ title: title.trim(), description: description.trim(), status });
       setTitle('');
       setDescription('');
-      setStatus('TODO');
+      // Reset to default status
+      const defaultStatus = statuses.find(s => s.isDefault);
+      setStatus(defaultStatus?.statusKey || statuses[0]?.statusKey || '');
     }
   };
 
@@ -66,12 +78,20 @@ export default function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
           id="status"
           value={status}
           onChange={(e) => setStatus(e.target.value as TaskStatus)}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isLoading}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
         >
-          <option value="TODO">To Do</option>
-          <option value="IN_PROGRESS">In Progress</option>
-          <option value="DONE">Done</option>
+          {isLoading ? (
+            <option>Loading statuses...</option>
+          ) : (
+            statuses
+              .sort((a, b) => a.displayOrder - b.displayOrder)
+              .map(s => (
+                <option key={s.statusKey} value={s.statusKey}>
+                  {s.icon} {s.displayName}
+                </option>
+              ))
+          )}
         </select>
       </div>
 
