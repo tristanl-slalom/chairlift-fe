@@ -1,13 +1,31 @@
+export interface SeatCapacity {
+  economy: number;
+  business: number;
+  first: number;
+}
+
+export interface Pricing {
+  economy: number;
+  business: number;
+  first: number;
+}
+
 export interface Flight {
   flightId: string;
   flightNumber: string;
-  airline: string;
+  airlineCode: string;
   origin: string;
   destination: string;
+  departureDate: string;
   departureTime: string;
+  arrivalDate: string;
   arrivalTime: string;
-  price: number;
-  availableSeats: number;
+  duration: number;
+  aircraft: string;
+  capacity: SeatCapacity;
+  availableSeats: SeatCapacity;
+  pricing: Pricing;
+  status: string;
   createdAt: string;
   updatedAt: string;
 }
