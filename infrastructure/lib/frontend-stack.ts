@@ -15,7 +15,7 @@ export class FrontendStack extends cdk.Stack {
     super(scope, id, props);
 
     // Import BFF API URL from exports
-    const bffApiUrl = cdk.Fn.importValue('ChairliftBffApiUrl');
+    const bffApiUrl = cdk.Fn.importValue('ChairliftBFFApiUrl');
 
     // S3 bucket for static website hosting
     // Note: Do NOT enable websiteIndexDocument/websiteErrorDocument here
