@@ -27,7 +27,7 @@ function handleApiError(error: unknown): never {
 export const flightsApi = {
   async searchFlights(params: SearchFlightsParams): Promise<Flight[]> {
     try {
-      const response = await apiClient.get<Flight[]>('/flights', { params });
+      const response = await apiClient.get<Flight[]>('/flights/search', { params });
       return response.data;
     } catch (error) {
       return handleApiError(error);
@@ -96,7 +96,7 @@ export const bookingsApi = {
 
   async listCustomerBookings(customerId: string): Promise<Booking[]> {
     try {
-      const response = await apiClient.get<Booking[]>(`/customers/${customerId}/bookings`);
+      const response = await apiClient.get<Booking[]>(`/bookings/customer/${customerId}`);
       return response.data;
     } catch (error) {
       return handleApiError(error);
