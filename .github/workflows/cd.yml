@@ -36,7 +36,7 @@ jobs:
         id: get-bff-url
         run: |
           BFF_URL=$(aws cloudformation describe-stacks \
-            --stack-name ConceptoBffStack \
+            --stack-name ChairliftBFFStack \
             --query 'Stacks[0].Outputs[?OutputKey==`ApiUrl`].OutputValue' \
             --output text)
           echo "BFF_URL=${BFF_URL}api" >> $GITHUB_OUTPUT
@@ -58,7 +58,7 @@ jobs:
       - name: Output Website URL
         run: |
           WEBSITE_URL=$(aws cloudformation describe-stacks \
-            --stack-name ConceptoFrontendStack \
+            --stack-name ChairliftFrontendStack \
             --query 'Stacks[0].Outputs[?OutputKey==`WebsiteUrl`].OutputValue' \
             --output text)
           echo "Website URL: $WEBSITE_URL"
