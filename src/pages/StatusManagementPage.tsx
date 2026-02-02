@@ -50,9 +50,9 @@ export default function StatusManagementPage() {
     setModalMode('delete');
   };
 
-  const handleCreateSubmit = async (data: CreateStatusConfigRequest) => {
+  const handleCreateSubmit = async (data: CreateStatusConfigRequest | UpdateStatusConfigRequest) => {
     try {
-      await createStatus.mutateAsync(data);
+      await createStatus.mutateAsync(data as CreateStatusConfigRequest);
       setModalMode(null);
       showNotification('success', 'Status created successfully');
     } catch (error) {
@@ -61,11 +61,11 @@ export default function StatusManagementPage() {
     }
   };
 
-  const handleUpdateSubmit = async (data: UpdateStatusConfigRequest) => {
+  const handleUpdateSubmit = async (data: CreateStatusConfigRequest | UpdateStatusConfigRequest) => {
     if (!selectedStatus) return;
 
     try {
-      await updateStatus.mutateAsync({ statusKey: selectedStatus.statusKey, request: data });
+      await updateStatus.mutateAsync({ statusKey: selectedStatus.statusKey, request: data as UpdateStatusConfigRequest });
       setModalMode(null);
       showNotification('success', 'Status updated successfully');
     } catch (error) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StatusConfig } from '../../types/status-config';
+import { StatusConfig, CreateStatusConfigRequest, UpdateStatusConfigRequest } from '../../types/status-config';
 import ColorPicker from './ColorPicker';
 import IconPicker from './IconPicker';
 import StatusPreview from './StatusPreview';
@@ -8,7 +8,7 @@ import { useStatuses } from '../../hooks/useStatuses';
 interface StatusFormProps {
   mode: 'create' | 'edit';
   existingStatus?: StatusConfig;
-  onSubmit: (data: Record<string, unknown>) => Promise<void>;
+  onSubmit: (data: CreateStatusConfigRequest | UpdateStatusConfigRequest) => Promise<void>;
   onCancel: () => void;
   isSubmitting: boolean;
 }
