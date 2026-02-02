@@ -20,7 +20,7 @@ vi.mock('@dnd-kit/sortable', () => ({
     isDragging: false,
   }),
   SortableContext: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  arrayMove: (arr: any[], oldIndex: number, newIndex: number) => {
+  arrayMove: <T,>(arr: T[], oldIndex: number, newIndex: number) => {
     const newArr = [...arr];
     const [item] = newArr.splice(oldIndex, 1);
     newArr.splice(newIndex, 0, item);

@@ -8,7 +8,7 @@ import { useStatuses } from '../../hooks/useStatuses';
 interface StatusFormProps {
   mode: 'create' | 'edit';
   existingStatus?: StatusConfig;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: Record<string, unknown>) => Promise<void>;
   onCancel: () => void;
   isSubmitting: boolean;
 }

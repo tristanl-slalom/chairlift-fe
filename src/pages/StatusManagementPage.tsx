@@ -95,7 +95,7 @@ export default function StatusManagementPage() {
         }))
       });
       showNotification('success', 'Status order updated');
-    } catch (error) {
+    } catch {
       showNotification('error', 'Failed to reorder statuses');
     }
   };
