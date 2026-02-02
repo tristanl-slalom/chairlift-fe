@@ -5,10 +5,10 @@ import { FrontendStack } from '../lib/frontend-stack';
 
 const app = new cdk.App();
 
-new FrontendStack(app, 'ConceptoFrontendStack', {
+new FrontendStack(app, 'ChairliftFrontendStack', {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION || 'us-west-2'
   },
-  description: 'Concepto Frontend Stack'
+  description: 'Chairlift Frontend Stack'
 });

@@ -15,14 +15,14 @@ export class FrontendStack extends cdk.Stack {
     super(scope, id, props);
 
     // Import BFF API URL from exports
-    const bffApiUrl = cdk.Fn.importValue('ConceptoBffApiUrl');
+    const bffApiUrl = cdk.Fn.importValue('ChairliftBffApiUrl');
 
     // S3 bucket for static website hosting
     // Note: Do NOT enable websiteIndexDocument/websiteErrorDocument here
     // as it switches CloudFront to use custom origin instead of S3 origin,
     // which breaks OAI. CloudFront handles SPA routing via error responses.
     const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
-      bucketName: `concepto-frontend-${this.account}`,
+      bucketName: `chairlift-frontend-${this.account}`,
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
@@ -76,7 +76,7 @@ export class FrontendStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'WebsiteUrl', {
       value: `https://${distribution.distributionDomainName}`,
       description: 'CloudFront distribution URL',
-      exportName: 'ConceptoFrontendUrl'
+      exportName: 'ChairliftFrontendUrl'
     });
 
     new cdk.CfnOutput(this, 'BucketName', {

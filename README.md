@@ -1,66 +1,89 @@
-# Concepto Frontend
+# Chairlift Frontend
 
-React-based frontend application for the Concepto task management system. Built with Vite, TypeScript, Tailwind CSS, and React Query.
+React frontend for the Slalom Chairlift flight booking application.
 
-## Architecture
+## Overview
 
-- **Framework**: React 18 with TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS
-- **Data Fetching**: TanStack React Query (formerly React Query)
-- **HTTP Client**: Axios
-- **Hosting**: AWS S3 + CloudFront
-- **Infrastructure**: AWS CDK
-- **CI/CD**: GitHub Actions with OIDC authentication
+This is a modern React application built with TypeScript, Vite, and Tailwind CSS. It provides a user-friendly interface for searching flights, booking tickets, and managing customer travel information.
 
-## Features
+## Tech Stack
 
-- Create, read, update, and delete tasks
-- Filter tasks by status (To Do, In Progress, Done)
-- Real-time status updates
-- Responsive design with Tailwind CSS
-- Optimistic UI updates with React Query
-- Comprehensive error handling
-- Loading states and empty states
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **React Router** - Client-side routing
+- **React Query (@tanstack/react-query)** - Data fetching and caching
+- **Axios** - HTTP client
+- **Tailwind CSS** - Styling
+- **Vitest** - Unit testing
+- **React Testing Library** - Component testing
+- **AWS CDK** - Infrastructure as code
 
-## Local Development
+## Prerequisites
 
-### Prerequisites
+- Node.js 20.x or higher
+- npm 9.x or higher
+- AWS CLI configured (for deployment)
 
-- Node.js 20+
-- npm or yarn
-- BFF API running or deployed
+## Quick Start
 
-### Setup
+### 1. Install Dependencies
 
-1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Create environment file:
+### 2. Configure Environment
+
+Create a `.env` file based on `.env.example`:
+
 ```bash
 cp .env.example .env
 ```
 
-3. Update `.env` with your BFF API URL:
-```bash
-VITE_API_URL=https://your-bff-api-url.amazonaws.com/prod/api
-# or for local development:
-VITE_API_URL=http://localhost:3000/api
+Update the API URL:
+
+```env
+VITE_API_URL=https://your-bff-api-url/api
 ```
 
-4. Start development server:
+### 3. Start Development Server
+
 ```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`
+The application will be available at `http://localhost:5173`.
 
-### Development Commands
+## Available Routes
+
+### Public Routes
+
+- **/** - Flight Search
+  - Search for available flights by origin, destination, date, and price range
+  - View flight results and select flights to book
+
+- **/booking** - Booking Flow
+  - Multi-step booking wizard
+  - Enter passenger information
+  - Confirm booking details
+
+- **/customers/:id/dashboard** - Customer Dashboard
+  - View customer profile and loyalty status
+  - See upcoming and past trips
+  - Quick access to book new flights
+
+- **/bookings/:id** - Booking Details
+  - View complete booking information
+  - See flight details and passenger info
+  - Check booking status
+
+## Available Scripts
+
+### Development
 
 ```bash
-# Start dev server
+# Start dev server with hot reload
 npm run dev
 
 # Build for production
@@ -68,169 +91,204 @@ npm run build
 
 # Preview production build
 npm run preview
-
-# Run tests
-npm test
-
-# Run tests in UI mode
-npm run test:ui
-
-# Lint code
-npm run lint
-npm run lint:fix
 ```
 
-## Project Structure
-
-```
-concepto-fe/
-├── src/
-│   ├── api/                # API client layer
-│   │   └── tasks.api.ts
-│   ├── components/         # React components
-│   │   └── tasks/
-│   │       ├── TaskForm.tsx
-│   │       ├── TaskItem.tsx
-│   │       ├── TaskList.tsx
-│   │       └── TaskFilters.tsx
-│   ├── hooks/              # Custom React hooks
-│   │   └── useTasks.ts
-│   ├── pages/              # Page components
-│   │   └── TasksPage.tsx
-│   ├── types/              # TypeScript types
-│   │   └── task.ts
-│   ├── test/               # Test utilities
-│   │   └── setup.ts
-│   ├── App.tsx             # Root component
-│   ├── main.tsx            # Entry point
-│   └── index.css           # Global styles
-├── infrastructure/         # AWS CDK code
-│   ├── bin/
-│   │   └── app.ts
-│   └── lib/
-│       └── frontend-stack.ts
-├── index.html              # HTML template
-├── vite.config.ts          # Vite configuration
-├── tailwind.config.js      # Tailwind CSS configuration
-└── tsconfig.json           # TypeScript configuration
-```
-
-## Deployment
-
-### Prerequisites
-
-1. AWS OIDC setup completed (see main project README)
-2. BFF service deployed (frontend depends on BFF API URL)
-3. GitHub repository secrets configured:
-   - `AWS_ROLE_ARN`
-   - `AWS_REGION`
-   - `AWS_ACCOUNT_ID`
-
-### Manual Deployment
-
-```bash
-# Set BFF API URL
-export VITE_API_URL=https://your-bff-api-url.amazonaws.com/prod/api
-
-# Build the project
-npm run build
-
-# Install AWS CDK
-npm install -g aws-cdk
-
-# Bootstrap CDK (first time only)
-cdk bootstrap
-
-# Deploy (requires BFF deployed first)
-cdk deploy
-
-# View outputs
-aws cloudformation describe-stacks \
-  --stack-name ConceptoFrontendStack \
-  --query 'Stacks[0].Outputs'
-```
-
-### CI/CD Pipeline
-
-The project uses GitHub Actions for CI/CD:
-
-- **CI Pipeline** (`.github/workflows/ci.yml`): Runs on PRs and pushes to main
-  - Linting
-  - Type checking
-  - Tests
-  - Build verification
-
-- **CD Pipeline** (`.github/workflows/cd.yml`): Runs on pushes to main
-  - Retrieves BFF API URL from AWS
-  - Builds the application with production API URL
-  - Deploys to S3 and invalidates CloudFront cache
-  - Outputs website URL
-
-## Environment Variables
-
-- `VITE_API_URL`: BFF API base URL (required)
-
-Example: `https://abc123.execute-api.us-west-2.amazonaws.com/prod/api`
-
-## Testing
-
-The project uses Vitest with React Testing Library:
+### Testing
 
 ```bash
 # Run tests
 npm test
 
 # Run tests in watch mode
-npm test -- --watch
+npm run test:watch
 
 # Run tests with UI
 npm run test:ui
 
 # Run tests with coverage
-npm test -- --coverage
+npm run test -- --coverage
 ```
 
-## Component Overview
+### Code Quality
 
-### TasksPage
-Main page component that orchestrates all task operations and manages state.
+```bash
+# Lint code
+npm run lint
 
-### TaskForm
-Form component for creating new tasks with title, description, and status.
+# Fix linting issues
+npm run lint:fix
+```
 
-### TaskList
-Displays a list of tasks with loading and empty states.
+### Infrastructure
 
-### TaskItem
-Individual task card with status dropdown and delete button.
+```bash
+# Deploy to AWS
+npm run cdk:deploy
 
-### TaskFilters
-Status filter buttons with task counts.
+# Preview CloudFormation template
+npm run cdk:synth
 
-## Hooks
+# Destroy infrastructure
+npm run cdk:destroy
+```
 
-### useTasks
-React Query hooks for task operations:
-- `useTasks(status?)` - List tasks with optional status filter
-- `useTask(id)` - Get single task by ID
-- `useCreateTask()` - Create new task mutation
-- `useUpdateTask()` - Update task mutation
-- `useDeleteTask()` - Delete task mutation
+## Environment Variables
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `VITE_API_URL` | BFF API base URL | Yes | `http://localhost:3000/api` |
+
+## Project Structure
+
+```
+src/
+├── api/                    # API client and HTTP requests
+│   └── chairlift-api.ts   # Flights, customers, and bookings API
+├── components/            # Reusable UI components
+│   ├── FlightCard.tsx    # Display flight information
+│   ├── BookingCard.tsx   # Display booking summary
+│   └── LoyaltyBadge.tsx  # Display customer loyalty tier
+├── hooks/                 # React Query hooks
+│   ├── useFlights.ts     # Flight search and details hooks
+│   ├── useCustomers.ts   # Customer and dashboard hooks
+│   └── useBookings.ts    # Booking management hooks
+├── pages/                 # Page components
+│   ├── FlightSearch.tsx       # Search flights page
+│   ├── BookingFlow.tsx        # Multi-step booking wizard
+│   ├── CustomerDashboard.tsx  # Customer profile and trips
+│   └── BookingDetails.tsx     # View booking information
+├── types/                 # TypeScript type definitions
+│   ├── flight.types.ts        # Flight and search types
+│   ├── customer.types.ts      # Customer and loyalty types
+│   ├── booking.types.ts       # Booking types
+│   └── aggregated.types.ts    # BFF aggregated response types
+├── App.tsx               # Main app component with routing
+└── main.tsx              # Application entry point
+
+infrastructure/
+├── bin/
+│   └── app.ts           # CDK app entry point
+└── lib/
+    └── frontend-stack.ts # Frontend infrastructure stack
+```
+
+## Key Features
+
+### Flight Search
+
+- Search by origin, destination, departure date
+- Filter by price range
+- View available seats and pricing
+- Select flights for booking
+
+### Booking Management
+
+- Multi-step booking wizard
+- Real-time validation
+- Seat selection
+- Booking confirmation
+
+### Customer Dashboard
+
+- View profile information
+- Display loyalty tier and points
+- List upcoming trips
+- View past bookings
+- Quick flight search access
+
+### Booking Details
+
+- Complete flight information
+- Passenger details
+- Booking status tracking
+- Loyalty program integration
+
+## Data Fetching
+
+This application uses React Query for efficient data fetching and caching:
+
+### Queries
+
+- `useFlightSearch(params)` - Search for flights
+- `useFlightDetails(id)` - Get flight details
+- `useCustomerDashboard(id)` - Get customer dashboard with aggregated data
+- `useBookingDetails(id)` - Get booking details with flight and customer info
+- `useCustomerBookings(customerId)` - List customer bookings
+
+### Mutations
+
+- `useCreateBooking()` - Create a new booking
+- `useUpdateCustomer()` - Update customer information
+
+All queries are automatically cached and invalidated when related mutations succeed.
+
+## Infrastructure
+
+The application is deployed to AWS using CDK:
+
+- **S3** - Static website hosting
+- **CloudFront** - CDN distribution
+- **Origin Access Identity** - Secure S3 access
+
+### Deployment
+
+```bash
+# Build the application
+npm run build
+
+# Deploy to AWS
+npm run cdk:deploy
+```
+
+The CloudFront URL will be displayed in the CDK output.
+
+## Testing
+
+### Test Structure
+
+- **Unit tests** - Component logic and API clients
+- **Integration tests** - Component interactions
+- **Mock data** - Realistic test fixtures
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Watch mode
+npm run test:watch
+
+# UI mode
+npm run test:ui
+
+# Coverage report
+npm run test -- --coverage
+```
 
 ## Styling
 
-The project uses Tailwind CSS for styling with a utility-first approach. Custom styles are minimal and focused on component-specific needs.
+This application uses Tailwind CSS for styling with utility-first CSS framework.
 
-## Related Repositories
+## API Integration
 
-- [concepto-be-tasks](https://github.com/tristanl-slalom/concepto-be-tasks) - Tasks Microservice
-- [concepto-bff](https://github.com/tristanl-slalom/concepto-bff) - Backend for Frontend
-- [concepto-meta](https://github.com/tristanl-slalom/concepto-meta) - Meta repository with documentation
+The frontend communicates with the Chairlift BFF (Backend for Frontend) API.
 
-## Browser Support
+### Endpoints Used
 
-- Modern browsers (Chrome, Firefox, Safari, Edge)
-- ES2020+ support required
+#### Flights
+- `GET /api/flights` - Search flights
+- `GET /api/flights/:id` - Get flight details
+
+#### Customers
+- `GET /api/customers/:id` - Get customer
+- `GET /api/customers/:id/dashboard` - Get aggregated dashboard
+- `PUT /api/customers/:id` - Update customer
+
+#### Bookings
+- `POST /api/bookings` - Create booking
+- `GET /api/bookings/:id/details` - Get booking with flight and customer
+- `GET /api/customers/:id/bookings` - List customer bookings
 
 ## License
 

@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import TasksPage from './pages/TasksPage';
-import StatusManagementPage from './pages/StatusManagementPage';
+import FlightSearch from './pages/FlightSearch';
+import BookingFlow from './pages/BookingFlow';
+import CustomerDashboard from './pages/CustomerDashboard';
+import BookingDetails from './pages/BookingDetails';
 
 function Navigation() {
   const location = useLocation();
@@ -10,7 +12,9 @@ function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
-            <h1 className="text-xl font-bold text-gray-900">Concepto</h1>
+            <Link to="/" className="text-xl font-bold text-blue-600 hover:text-blue-700">
+              Slalom Chairlift
+            </Link>
             <div className="flex gap-1">
               <Link
                 to="/"
@@ -20,17 +24,7 @@ function Navigation() {
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }`}
               >
-                Tasks
-              </Link>
-              <Link
-                to="/admin/statuses"
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  location.pathname === '/admin/statuses'
-                    ? 'bg-blue-50 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                }`}
-              >
-                Status Management
+                Search Flights
               </Link>
             </div>
           </div>
@@ -46,8 +40,10 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Navigation />
         <Routes>
-          <Route path="/" element={<TasksPage />} />
-          <Route path="/admin/statuses" element={<StatusManagementPage />} />
+          <Route path="/" element={<FlightSearch />} />
+          <Route path="/booking" element={<BookingFlow />} />
+          <Route path="/customers/:id/dashboard" element={<CustomerDashboard />} />
+          <Route path="/bookings/:id" element={<BookingDetails />} />
         </Routes>
       </div>
     </BrowserRouter>
